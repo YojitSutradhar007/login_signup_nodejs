@@ -5,7 +5,7 @@ import 'package:login_signup_nodejs/services/api_constants.dart';
 import 'package:login_signup_nodejs/services/status_code.dart';
 
 class ApiServices {
-  Future addUser(Map<String, String> userData) async {
+  Future signUpUser(Map<String, String> userData) async {
     try {
       http.Response response = await http.post(
         Uri.parse("${APIConstants.baseUrl}signUp"),
@@ -14,6 +14,45 @@ class ApiServices {
       log(response.statusCode.toString());
       if (response.statusCode == ServerStatusCodes.addSuccess) {
         var jsonData = jsonDecode(response.body);
+        return jsonData;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future loginUser(Map<String, String> userData) async {
+    try {
+      http.Response response = await http.post(
+        Uri.parse("http://10.200.147.216:7878/adduser/login"),
+        body: userData,
+      );
+      log(response.statusCode.toString());
+      if (response.statusCode == ServerStatusCodes.success) {
+        var jsonData = jsonDecode(response.body);
+        log(jsonData.toString());
+        return jsonData;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future checkAuthToken(Map<String, String> token) async {
+    try {
+      http.Response response = await http.post(
+        Uri.parse("http://10.200.147.216:7878/adduser/checkToken"),
+        body: token,
+      );
+      log(response.statusCode.toString());
+      if (response.statusCode == ServerStatusCodes.accepted) {
+        var jsonData = jsonDecode(response.body);
+        log(jsonData.toString());
+        return jsonData;
+      }
+      if (response.statusCode == ServerStatusCodes.unAuthorised) {
+        var jsonData = jsonDecode(response.body);
+        log(jsonData.toString());
         return jsonData;
       }
     } catch (e) {

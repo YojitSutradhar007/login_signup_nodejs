@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../resources/resources.dart';
+import '../../../model/login_model.dart';
 import '../../../routes/routes_name.dart';
+import '../../../services/api_services.dart';
+import '../../../services/user_preferences.dart';
 import '../../../widget/widget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -24,6 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
   final bar = WarningBar();
+  final List<LoginModel>loginData=[];
+  final userPreferences=UserPreferences();
 
   @override
   void dispose() {
@@ -98,6 +102,36 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _passController.text.trim().isEmpty) {
                               requiredAllFilled(context); // through scaffold snackbar
                             } else {
+                              log("sadasdasdsa");
+                              final loginAuth= await ApiServices().loginUser({
+                                "email": _emailController.text.trim(),
+                                "password": _passController.text.trim(),
+                              });/*.then((value) {
+                                print(value);
+                                // loginData.add(LoginModel.fromJson(value));
+                                // log(loginData.length.toString());
+                                // log(loginData[0].success.toString());
+                                // log(loginData[0].token.toString());
+                                // log(loginData[0].message.toString());
+                                // log(loginData[0].result!.email.toString());
+                          });*/
+                              loginData.add(LoginModel.fromJson(loginAuth));
+                              log(loginData.length.toString());
+                              log(loginData[0].success.toString());
+                              log(loginData[0].token.toString());
+                              log(loginData[0].message.toString());
+                              log(loginData[0].result!.email.toString());
+                              if(loginData[0].success!){
+                                userPreferences.saveUserToken(loginData.first.token!);
+                                final success=bar.snack("Login Successfully", Colors.green);
+
+                                // context.go(RoutesName.homeScreen);
+                                ScaffoldMessenger.of(context).showSnackBar(success);
+
+                              }else{
+                                final failed=bar.snack("Login failed", Colors.red);
+                                ScaffoldMessenger.of(context).showSnackBar(failed);
+                              }
 
                             }
                           },

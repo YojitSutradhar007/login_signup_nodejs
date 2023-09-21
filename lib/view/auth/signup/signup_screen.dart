@@ -6,7 +6,6 @@ import '../../../model/model.dart';
 import '../../../resources/resources.dart';
 import '../../../routes/routes_name.dart';
 import '../../../services/api_services.dart';
-import '../../../services/services.dart';
 import '../../../widget/widget.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -101,7 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             _passController.text.trim().isEmpty) {
                           requiredAllFilled(context);
                         } else {
-                          final checkAuth= await ApiServices().addUser({
+                          final checkAuth= await ApiServices().signUpUser({
                             "email": _emailController.text.trim(),
                             "password": _passController.text.trim(),
                           });/*.then((value) {
@@ -112,6 +111,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                           log(signupData.length.toString());
                           log(signupData[0].success.toString());
+                          if(signupData[0].success){
+                            final success=bar.snack("Add Successfully", Colors.green);
+                            ScaffoldMessenger.of(context).showSnackBar(success);
+                          }else{
+                            final failed=bar.snack("Denied", Colors.red);
+                            ScaffoldMessenger.of(context).showSnackBar(failed);
+                          }
 
 
                         }

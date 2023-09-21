@@ -27,11 +27,11 @@ GoRouter router = GoRouter(
         ),
       ],
     ),
-    // GoRoute(
-    //   path: RoutesName.homeScreen,
-    //   builder: (context, state) {
-    //     return const HomeScreen();
-    //   },
-    // ),
+    GoRoute(
+      path: RoutesName.homeScreen,
+      builder: (context, state) {
+        return   HomeScreen();
+      },
+    ),
   ],
 );
